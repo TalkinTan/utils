@@ -2,16 +2,20 @@ package com.talkingtan.excel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.sl.usermodel.ColorStyle;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 
+import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
  * 统计bug修复率
@@ -33,44 +37,59 @@ public class SummaryBugs {
     static {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
-        TOTAL_XLS = TOTAL_XLS + "-"+ format.format(c.getTime()) + ".xls";
+        TOTAL_XLS = TOTAL_XLS + "-" + format.format(c.getTime()) + ".xls";
 
         NAMES_LIST.add("liangzhiwei");
-        NAMES_LIST.add("donghongping");
-        NAMES_LIST.add("dengxuepan");
-        NAMES_LIST.add("linhuaxin");
-        NAMES_LIST.add("liudajun");
         NAMES_LIST.add("liupan");
-        NAMES_LIST.add("hubei");
-        NAMES_LIST.add("longteng");
-        NAMES_LIST.add("yanghao");
+        NAMES_LIST.add("liudajun");
         NAMES_LIST.add("huzongyong");
-        NAMES_LIST.add("zhuanghuanbin");
-        NAMES_LIST.add("huangkunting");
-        NAMES_LIST.add("liangbingkun");
-        NAMES_LIST.add("zhongchongbin");
         NAMES_LIST.add("fengtao");
+
+        NAMES_LIST.add("lizihao");
+        NAMES_LIST.add("pengyi");
+        NAMES_LIST.add("xuezhigang");
+
         NAMES_LIST.add("duyumin");
+        NAMES_LIST.add("linhuaxin");
+        NAMES_LIST.add("zhuanghuanbin");
+        NAMES_LIST.add("yiyujie");
+
+        NAMES_LIST.add("donghongping");
+        NAMES_LIST.add("yezhihao");
+        NAMES_LIST.add("liyuwen");
         NAMES_LIST.add("yangmengfei");
 
+        NAMES_LIST.add("keweimeng");
+        NAMES_LIST.add("huangkunting");
+        NAMES_LIST.add("liangbingkun");
+        NAMES_LIST.add("chenkai");
+        NAMES_LIST.add("zhanchangru");
+
         NAMES_MAP.put("liangzhiwei", "梁志伟");
-        NAMES_MAP.put("donghongping", "董红苹");
-        NAMES_MAP.put("dengxuepan", "邓雪潘");
-        NAMES_MAP.put("linhuaxin", "林华新");
-        NAMES_MAP.put("liudajun", "刘大军");
         NAMES_MAP.put("liupan", "刘攀");
-        NAMES_MAP.put("hubei", "胡贝");
-        NAMES_MAP.put("longteng", "龙腾");
-        NAMES_MAP.put("yanghao", "杨昊");
+        NAMES_MAP.put("liudajun", "刘大军");
         NAMES_MAP.put("huzongyong", "胡宗勇");
+        NAMES_MAP.put("fengtao", "冯涛");
+
+        NAMES_MAP.put("lizihao", "李子豪");
+        NAMES_MAP.put("pengyi", "彭毅");
+        NAMES_MAP.put("xuezhigang", "薛志刚");
+
+        NAMES_MAP.put("linhuaxin", "林华新");
+        NAMES_MAP.put("duyumin", "杜玉敏");
         NAMES_MAP.put("zhuanghuanbin", "庄焕滨");
+        NAMES_MAP.put("yiyujie", "衣玉杰");
+
+        NAMES_MAP.put("donghongping", "董红苹");
+        NAMES_MAP.put("yezhihao", "叶志豪");
+        NAMES_MAP.put("liyuwen", "李玉文");
+        NAMES_MAP.put("yangmengfei", "杨梦飞");
+
         NAMES_MAP.put("huangkunting", "黄坤庭");
         NAMES_MAP.put("liangbingkun", "梁炳坤");
-        NAMES_MAP.put("zhongchongbin", "钟崇斌");
-        NAMES_MAP.put("fengtao", "冯涛");
-        NAMES_MAP.put("duyumin", "杜玉敏");
-        NAMES_MAP.put("yangmengfei", "杨梦飞");
-        NAMES_MAP.put("wangruibo", "王瑞波");
+        NAMES_MAP.put("keweimeng", "柯伟梦");
+        NAMES_MAP.put("chenkai", "陈凯");
+        NAMES_MAP.put("zhanchangru", "詹昌如");
     }
 
     //new or open or reopen
@@ -171,6 +190,65 @@ public class SummaryBugs {
 
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        Font font = wb.createFont();
+        font.setColor(IndexedColors.WHITE.getIndex());
+        font.setBold(true);
+
+        if(row.getRowNum() <= 1) {
+            switch (column) {
+                case 0:
+                    cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 1:
+                    cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 2:
+                    cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 3:
+                    cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 4:
+                    cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 5:
+                    cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 6:
+                    cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 7:
+                    cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 8:
+                    cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 9:
+                    cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+                case 10:
+                    cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    break;
+            }
+
+            cellStyle.setFont(font);
+        }
+
+
+
+
         cell.setCellStyle(cellStyle);
         cell.setCellValue(value);
     }
@@ -188,11 +266,12 @@ public class SummaryBugs {
 
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
         cell.setCellStyle(cellStyle);
         cell.setCellValue(value);
 
         //bug修复率
-        if (10 == column && row.getRowNum() ==2) {
+        if (10 == column && row.getRowNum() == 2) {
             cell.setCellType(CellType.FORMULA);
             cell.setCellFormula("RANK(J3,$J$3:$J$19)");
         }
